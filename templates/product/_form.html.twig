@@ -1,0 +1,24 @@
+{{ form_start(form) }}
+<div class="form-group">
+    {{ form_label(form.name,"Name") }}
+    {{ form_errors(form.name) }}
+    {{ form_widget(form.name,{'attr': {'class': 'form-control'}}) }}
+</div>
+<div class="form-group">
+    {{ form_label(form.img_path,"Image") }}
+    {{ form_errors(form.img_path) }}
+    {{ form_widget(form.img_path) }}
+</div>
+<div class="form-group">
+    {{ form_label(form.description) }}
+    {{ form_errors(form.description) }}
+    {{ form_widget(form.description,{'attr': {'class': 'form-control'}}) }}
+</div>
+<div class="form-group">
+    <div class="pull-right">
+        <button type="submit" class="btn btn-primary">
+            <span class="glyphicon glyphicon-floppy-disk"></span> Create it!
+        </button>
+    </div>
+</div>
+{{ form_end(form) }}

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Product page index!
+{% endblock %}
+
+{% block body %}
+    <section class="dashboard-content">
+        <p class="lead">Howdy!</p>
+        <p class="lead"> What do you want to do today?</p>
+    </section>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="bs-glyphicons">
+                <ul class="bs-glyphicons-list">
+                    <a href="{{ path("product_list") }}">
+                        <li>
+                            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                            <span class="glyphicon-class">Show me <br> a list of product</span>
+                        </li>
+                    </a>
+                    <a href="">
+                        <li>
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            <span class="glyphicon-class">Create <br> a new product</span>
+                        </li>
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

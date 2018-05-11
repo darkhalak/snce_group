@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Create product
+{% endblock %}
+
+{% block body %}
+    <h1>Create new product</h1>
+    <hr>
+        <a href="{{ path('product') }}" class="btn btn-default" >Back</a>
+    <hr>
+    <div class="col-xs-12">
+        {{ include('product/_form.html.twig', { 'form': form }) }}
+    </div>
+
+{% endblock %}

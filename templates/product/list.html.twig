@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts_top %}
+    {{ parent() }}
+    <script src="{{ asset('js/jQuery.paginate.min.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+    Product list
+{% endblock %}
+
+{% block body %}
+    <h1>Product list</h1>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="pull-left">
+                <a href="{{ path('product') }}" class="btn btn-default">Back</a>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Product inserted</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-4 pull-right">
+                        <span>Filter:</span>
+                        <input type="text" class="form-control" id="search" placeholder="filter...">
+                    </div>
+
+                </div>
+                <div class="row mytable">
+                    <div class="col-xs-12">
+                        <div class="col-xs-3 list-table-th">
+                            <strong>N°</strong>
+                        </div>
+                        <div class="col-xs-3 list-table-th">
+                            <strong>Date</strong>
+                        </div>
+                        <div class="col-xs-3 list-table-th">
+                            <strong>Image</strong>
+                        </div>
+                        <div class="col-xs-3 list-table-th">
+                            <strong>Name</strong>
+                        </div>
+                    </div>
+                    <div id="pagination__list_product">
+                    {% for product in products %}
+                        {{ include('product/_item_list.html.twig', { 'product': product,'loop':loop }) }}
+                    {% else %}
+                        <div class="col-xs-12">
+                            <p class="text-center"><i>No product found</i></p>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+    <script src="{{ asset('js/pagination_list.js') }}"></script>
+{% endblock %}
