@@ -1,4 +1,4 @@
-# Symfony Test - S'ence Group 
+# Symfony Test Product - S'nce Group 
 
 Hi folks! 
 
