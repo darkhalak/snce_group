@@ -29,14 +29,7 @@ or duplicate the file '.env.dist' and rename it '.env'
 
 - Open the file **.env**
 
-- Now, if you want to see the application in "Production Mode" (Current in Development mode) find 
-**APP_ENV=dev** and replace "dev" with "prod" like this:
-
-```sh
-APP_ENV=prod
-```
-
-then find this line
+- Find this line
 ```sh
 DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
 ```
@@ -49,6 +42,7 @@ Re-open the terminal in root project's directory and lunch these command.
 
 ```sh
 $ composer install
+$ composer require server --dev
 $ php bin/console doctrine:migrations:migrate
 $ php bin/console server:run
 ```
