@@ -60,7 +60,9 @@ jQuery(document).ready(function() {
     // index when inserting a new item (e.g. 2)
     $collectionHolder.data('index', $collectionHolder.find(':input').length);
 
-    addTagForm($collectionHolder, $newLinkLi);
+    if($collectionHolder.find('div.tags-setted').length == 0){
+        addTagForm($collectionHolder, $newLinkLi);
+    }
 
     $addTagLink.on('click', function(e) {
         // prevent the link from creating a "#" on the URL
