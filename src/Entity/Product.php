@@ -63,13 +63,13 @@ class Product
     private $deleted;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductTag", mappedBy="product_id", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="products",cascade={"persist"})
      */
-    private $productTags;
+    private $tags;
 
     public function __construct()
     {
-        $this->productTags = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId()
@@ -218,31 +218,26 @@ class Product
     }
 
     /**
-     * @return Collection|ProductTag[]
+     * @return Collection|Tag[]
      */
-    public function getProductTags(): Collection
+    public function getTags(): Collection
     {
-        return $this->productTags;
+        return $this->tags;
     }
 
-    public function addProductTag(ProductTag $productTag): self
+    public function addTag(Tag $tag): self
     {
-        if (!$this->productTags->contains($productTag)) {
-            $this->productTags[] = $productTag;
-            $productTag->setProductId($this);
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
         }
 
         return $this;
     }
 
-    public function removeProductTag(ProductTag $productTag): self
+    public function removeTag(Tag $tag): self
     {
-        if ($this->productTags->contains($productTag)) {
-            $this->productTags->removeElement($productTag);
-            // set the owning side to null (unless already changed)
-            if ($productTag->getProductId() === $this) {
-                $productTag->setProductId(null);
-            }
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
         }
 
         return $this;

@@ -1,20 +1,25 @@
 <div class="col-xs-12 {{ cycle(['even', 'odd'], loop.index) }} list-table-tr list__product_item" >
-    <a href="#">
-        <div class="col-xs-3 list-table-td">
+    <a href="{{ path('update',{'product_id': product.id}) }}">
+        <div class="col-xs-2 list-table-td">
             {{ loop.index }}
         </div>
-        <div class="col-xs-3 list-table-td">
+        <div class="col-xs-2 list-table-td">
             {{ product.createAt|date("d/m/Y") }}
         </div>
-        <div class="col-xs-3 list-table-td">
+        <div class="col-xs-2 list-table-td">
             {% if product.imgPath == null %}
                 <i>No image</i>
             {% else %}
                 <img src="{{ asset('uploads/images/' ~ product.imgPath) }}" class="img-responsive image-thumb">
             {% endif %}
         </div>
-        <div class="col-xs-3 list-table-td">
+        <div class="col-xs-2 list-table-td">
             {{ product.name }}
+        </div>
+        <div class="col-xs-2">
+            {% for tag in product.tags %}
+                {{ tag.name }}
+            {% endfor %}
         </div>
     </a>
 </div>

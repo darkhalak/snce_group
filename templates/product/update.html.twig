@@ -1,32 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Product page index!
+    Update product
 {% endblock %}
-
+{% block javascripts_top %}
+    {{ parent() }}
+{% endblock %}
 {% block body %}
-    <section class="dashboard-content">
-        <p class="lead">Howdy!</p>
-        <p class="lead"> What do you want to do today?</p>
-    </section>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="bs-glyphicons">
-                <ul class="bs-glyphicons-list">
-                    <a href="{{ path("product_list") }}">
-                        <li>
-                            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                            <span class="glyphicon-class">Show me <br> a list of product</span>
-                        </li>
-                    </a>
-                    <a href="">
-                        <li>
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                            <span class="glyphicon-class">Create <br> a new product</span>
-                        </li>
-                    </a>
-                </ul>
-            </div>
-        </div>
+    <h1>Update product</h1>
+    <hr>
+    <a href="{{ path('product') }}" class="btn btn-default" >Back</a>
+    <hr>
+    <div class="col-xs-12">
+        {{ include('product/_form.html.twig', { 'form': form }) }}
     </div>
+
+{% endblock %}
+{% block javascripts_bottom %}
+    {{ parent() }}
+    <script src="{{ asset('js/tag_script.js') }}"></script>
 {% endblock %}

@@ -6,6 +6,7 @@ use App\Entity\Product;
 use App\Entity\Tag;
 use App\Form\ProductType;
 use App\Form\TagType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,15 +44,11 @@ class ProductController extends Controller
     public function actionCreate(Request $request)
     {
         $product = new Product();
-        $tag= new Tag();
-
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
-        $form_tag = $this->createForm(TagType::class, $tag);
-        $form_tag->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
             $product=$form->getData();
             /** @var UploadedFile $file */
             $file = $product->getImgPath();
@@ -68,7 +65,16 @@ class ProductController extends Controller
 
             $product->setCreateAt(time());
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $originalTags = new ArrayCollection();
+            foreach ($originalTags as $tag) {
+                if (false === $product->getTags()->contains($tag)) {
+                    // remove the Task from the Tag
+                    $tag->getTasks()->removeElement($product);
+
+                    $entityManager->persist($tag);
+                }
+            }
+
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -78,7 +84,6 @@ class ProductController extends Controller
 
         return $this->render('product/create.html.twig',[
             'form'=>$form->createView(),
-            'form_tag'=> $form_tag->createView()
         ]);
     }
 
@@ -87,8 +92,70 @@ class ProductController extends Controller
      *
      * @Route("/product/{product_id}/edit", name="update",requirements={"product_id"="\d+"})
      */
-    public function actionUpdate($product_id)
+    public function actionUpdate(Request $request,$product_id)
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $product = $this->loadProductEntity($product_id);
+
+        $originalTags = new ArrayCollection();
+
+        // Create an ArrayCollection of the current Tag objects in the database
+        foreach ($product->getTags() as $tag) {
+            $originalTags->add($tag);
+        }
+
+        $editForm = $this->createForm(ProductType::class, $product);
+
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() &&$editForm->isValid()) {
+            $product=$editForm->getData();
+            /** @var UploadedFile $file */
+            $file = $product->getImgPath();
+            if($file = ($file ?? null)){
+                $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+
+                $file->move(
+                    $this->getParameter('image_directory'),
+                    $fileName
+                );
+
+                $product->setImgPath($fileName);
+            }
+
+            $product->setUpdateAt(time());
+
+            foreach ($originalTags as $tag) {
+                if (false === $product->getTags()->contains($tag)) {
+
+                    $tag->getProducts()->removeElement($product);
+
+                    $entityManager->persist($tag);
+
+                }
+            }
+
+            $entityManager->persist($product);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('list');
+        }
+
+        return $this->render('product/update.html.twig',[
+            'form'=>$editForm->createView(),
+        ]);
+    }
+
+    /**
+     * Matches /product/ with slug
+     *
+     * @Route("/product/{slug}", name="product_show")
+     */
+    public function actionView($slug)
+    {
+        // $slug will equal the dynamic part of the URL
+        // e.g. at /blog/yay-routing, then $slug='yay-routing'
+
         // ...
     }
 

@@ -34,12 +34,13 @@ class ProductType extends AbstractType {
         $builder
             ->add('name', TextType::class, ['label' => 'Image'])
             ->add('description', TextareaType::class, ['label' => 'Description','required'=>false])
-            ->add('img_path', FileType::class, ['label' => 'Image','required'=>false])
-            ->add('productTags',EntityType::class, [
-                'label'=>'Tags',
-                'multiple'=>true,
-                'class'=>Tag::class,
-                'choice_label' => 'name',
+            ->add('img_path', FileType::class, ['label' => 'Image','required'=>false,'data_class'=>null])
+            ->add('tags', CollectionType::class, [
+                'label'=>false,
+                'entry_type' => TagType::class,
+                'allow_add' => true,
+                'by_reference' => false,
+                'allow_delete' => true,
             ]);
     }
 

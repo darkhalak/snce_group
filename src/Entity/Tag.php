@@ -24,13 +24,13 @@ class Tag
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductTag", mappedBy="tag_id", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="App\Entity\Product", mappedBy="tags")
      */
-    private $productTags;
+    private $products;
 
     public function __construct()
     {
-        $this->productTags = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId()
@@ -51,31 +51,28 @@ class Tag
     }
 
     /**
-     * @return Collection|ProductTag[]
+     * @return Collection|Product[]
      */
-    public function getProductTags(): Collection
+    public function getProducts(): Collection
     {
-        return $this->productTags;
+        return $this->products;
     }
 
-    public function addProductTag(ProductTag $productTag): self
+    public function addProduct(Product $product): self
     {
-        if (!$this->productTags->contains($productTag)) {
-            $this->productTags[] = $productTag;
-            $productTag->setTagId($this);
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->addTag($this);
         }
 
         return $this;
     }
 
-    public function removeProductTag(ProductTag $productTag): self
+    public function removeProduct(Product $product): self
     {
-        if ($this->productTags->contains($productTag)) {
-            $this->productTags->removeElement($productTag);
-            // set the owning side to null (unless already changed)
-            if ($productTag->getTagId() === $this) {
-                $productTag->setTagId(null);
-            }
+        if ($this->products->contains($product)) {
+            $this->products->removeElement($product);
+            $product->removeTag($this);
         }
 
         return $this;
