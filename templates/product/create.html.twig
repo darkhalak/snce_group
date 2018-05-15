@@ -3,7 +3,10 @@
 {% block title %}
     Create product
 {% endblock %}
-
+{% block javascripts_top %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% endblock %}
 {% block body %}
     <h1>Create new product</h1>
     <hr>
@@ -13,4 +16,8 @@
         {{ include('product/_form.html.twig', { 'form': form }) }}
     </div>
 
+{% endblock %}
+{% block javascripts_bottom %}
+    {{ parent() }}
+    <script src="{{ asset('js/select2.js') }}"></script>
 {% endblock %}

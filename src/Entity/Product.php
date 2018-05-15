@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Product
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -35,7 +38,7 @@ class Product
     private $description;
 
     /**
-     * @ORM\Column(type="integer", nullable=true,options={"default": "CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $create_at;
 
@@ -55,9 +58,19 @@ class Product
     private $update_who;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true,options={"default": 0})
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $deleted;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductTag", mappedBy="product_id", orphanRemoval=true)
+     */
+    private $productTags;
+
+    public function __construct()
+    {
+        $this->productTags = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -202,5 +215,36 @@ class Product
     public function getImageSize(): ?int
     {
         return $this->imageSize;
+    }
+
+    /**
+     * @return Collection|ProductTag[]
+     */
+    public function getProductTags(): Collection
+    {
+        return $this->productTags;
+    }
+
+    public function addProductTag(ProductTag $productTag): self
+    {
+        if (!$this->productTags->contains($productTag)) {
+            $this->productTags[] = $productTag;
+            $productTag->setProductId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductTag(ProductTag $productTag): self
+    {
+        if ($this->productTags->contains($productTag)) {
+            $this->productTags->removeElement($productTag);
+            // set the owning side to null (unless already changed)
+            if ($productTag->getProductId() === $this) {
+                $productTag->setProductId(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -3,11 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Entity\Tag;
 use App\Form\ProductType;
-use App\Service\FileUploader;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Form\TagType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,8 +43,13 @@ class ProductController extends Controller
     public function actionCreate(Request $request)
     {
         $product = new Product();
+        $tag= new Tag();
+
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
+
+        $form_tag = $this->createForm(TagType::class, $tag);
+        $form_tag->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $product=$form->getData();
@@ -74,7 +77,8 @@ class ProductController extends Controller
         }
 
         return $this->render('product/create.html.twig',[
-            'form'=>$form->createView()
+            'form'=>$form->createView(),
+            'form_tag'=> $form_tag->createView()
         ]);
     }
 
@@ -85,19 +89,6 @@ class ProductController extends Controller
      */
     public function actionUpdate($product_id)
     {
-        // ...
-    }
-
-    /**
-     * Matches /product/ with slug
-     *
-     * @Route("/product/{slug}", name="product_show")
-     */
-    public function actionView($slug)
-    {
-        // $slug will equal the dynamic part of the URL
-        // e.g. at /blog/yay-routing, then $slug='yay-routing'
-
         // ...
     }
 
@@ -116,5 +107,20 @@ class ProductController extends Controller
     private function generateUniqueFileName()
     {
         return md5(uniqid());
+    }
+
+    public function actionAddTag(Request $request){
+        $tag= new Tag();
+        $form_tag = $this->createForm(TagType::class, $tag);
+        $form_tag->handleRequest($request);
+
+        if ($form_tag->isSubmitted() && $form_tag->isValid()) {
+            $tag=$form_tag->getData();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($tag);
+            $entityManager->flush();
+            return $this->json(['tag'=>$tag]);
+        }else
+            return false;
     }
 }

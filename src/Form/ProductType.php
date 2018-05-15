@@ -8,21 +8,39 @@ namespace App\Form;
 
 
 use App\Entity\Product;
+use App\Entity\Tag;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class ProductType extends AbstractType {
+
+    private $doctrine;
+    public $tags;
+
+    public function __construct(RegistryInterface $doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', TextType::class, ['label' => 'Image'])
             ->add('description', TextareaType::class, ['label' => 'Description','required'=>false])
-            ->add('img_path', FileType::class, ['label' => 'Image','required'=>false]);
+            ->add('img_path', FileType::class, ['label' => 'Image','required'=>false])
+            ->add('productTags',EntityType::class, [
+                'label'=>'Tags',
+                'multiple'=>true,
+                'class'=>Tag::class,
+                'choice_label' => 'name',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
